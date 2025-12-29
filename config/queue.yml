@@ -1,0 +1,16 @@
+# Queue configuration
+# Using Sidekiq for background job processing
+# Sidekiq is configured in config/initializers/sidekiq.rb
+# This file is kept for reference but not actively used with Sidekiq
+
+default: &default
+  queues: "*"
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

@@ -1,0 +1,16 @@
+# Redis cache configuration
+# Note: cache_store is configured in config/environments/*.rb files
+# This file is kept for reference but not actively used with Redis
+
+default: &default
+  store_options:
+    namespace: <%= Rails.env %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
