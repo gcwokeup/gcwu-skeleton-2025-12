@@ -18,8 +18,6 @@ gem "stimulus-rails"
 gem "dartsass-rails"
 # Bootstrap 5 for Rails
 gem "bootstrap", "~> 5.3"
-# Bootstrap Icons
-gem "bootstrap-icons-helper"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
