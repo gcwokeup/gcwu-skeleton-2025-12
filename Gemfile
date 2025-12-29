@@ -32,7 +32,7 @@ gem "redis", "~> 5.0"
 gem "hiredis-client" # C-based Redis client for better performance
 
 # Background job processing
-gem "sidekiq", "~> 7.0"
+gem "sidekiq", "~> 8.1"
 
 # Optional but recommended: Better Redis connection pooling
 gem "connection_pool"
