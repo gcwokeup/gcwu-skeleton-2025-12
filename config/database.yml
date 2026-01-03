@@ -85,8 +85,8 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: gcwu_skeleton_2025_12_production
-  username: gcwu_skeleton_2025_12
-  password: <%= ENV["gcwu_skeleton_2025_12_DATABASE_PASSWORD"] %>
+    <<: *default
+    database: gcwu_skeleton_2025_12_production
+    username: gcwu_skeleton_2025_12
+    password: <%= ENV["gcwu_skeleton_2025_12_DATABASE_PASSWORD"] %>
   # Note: Cache, Cable, and Queue use Redis (not separate databases)

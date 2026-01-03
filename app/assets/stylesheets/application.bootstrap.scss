@@ -1,6 +1,163 @@
 // Import Bootstrap from the bootstrap gem
 @import 'bootstrap';
 
+/* Custom styles for mobile-first design */
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better button focus states for accessibility */
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Navbar improvements */
+.navbar {
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  
+  @media (max-width: 576px) {
+    font-size: 1.25rem;
+  }
+}
+
+/* Card hover effects */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Auth forms */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* Better form spacing on mobile */
+@media (max-width: 576px) {
+  .form-control-lg,
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Hero section */
+.bg-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Footer always at bottom */
+footer {
+  margin-top: auto;
+}
+
+/* Improve readability */
+body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Better link hover states */
+a {
+  transition: all 0.2s ease;
+}
+
+a:not(.btn):hover {
+  opacity: 0.8;
+}
+
+/* Spacing utilities */
+.py-6 {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+@media (min-width: 768px) {
+  .py-6 {
+    padding-top: 6rem !important;
+    padding-bottom: 6rem !important;
+  }
+}
+
+/* Avatar styles */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Alert improvements for mobile */
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+
+/* Dropdown menu improvements */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+}
+
+/* Feature icons */
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #fff;
+  border-radius: 0.75rem;
+  background-color: var(--bs-primary);
+}
+
+/* Loading states */
+.btn.loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.btn.loading:after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+
 // Bootstrap Icons (via CDN in layout file)
 // Or download and add to vendor/assets if preferred
 

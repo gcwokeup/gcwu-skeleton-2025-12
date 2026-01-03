@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+    <%= link_to "Your App", root_path, class: "navbar-brand fw-bold" %>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <% if user_signed_in? %>
+          <li class="nav-item">
+            <%= link_to users_path, class: "nav-link" do %>
+              <i class="bi bi-people me-1"></i>
+              <span class="d-none d-lg-inline">Community</span>
+            <% end %>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <% if current_user.avatar.attached? %>
+                <%= image_tag current_user.avatar.variant(resize_to_limit: [64, 64]), class: "rounded-circle me-2", style: "width: 32px; height: 32px; object-fit: cover;", alt: current_user.full_name %>
+              <% elsif current_user.avatar_url.present? %>
+                <%= image_tag current_user.avatar_url, class: "rounded-circle me-2", style: "width: 32px; height: 32px; object-fit: cover;", alt: current_user.full_name %>
+              <% else %>
+                <span class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.875rem;">
+                  <%= current_user.first_name[0].upcase %><%= current_user.last_name[0].upcase %>
+                </span>
+              <% end %>
+              <span class="d-none d-md-inline"><%= current_user.first_name %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li>
+                <%= link_to user_path(current_user), class: "dropdown-item" do %>
+                  <i class="bi bi-person me-2"></i> My Profile
+                <% end %>
+              </li>
+              <li>
+                <%= link_to edit_user_path(current_user), class: "dropdown-item" do %>
+                  <i class="bi bi-pencil me-2"></i> Edit Profile
+                <% end %>
+              </li>
+              <li>
+                <%= link_to settings_path, class: "dropdown-item" do %>
+                  <i class="bi bi-gear me-2"></i> Settings
+                <% end %>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item text-danger" do %>
+                  <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                <% end %>
+              </li>
+            </ul>
+          </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary ms-lg-2" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>
+

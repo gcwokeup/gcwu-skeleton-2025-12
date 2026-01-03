@@ -32,6 +32,7 @@
   - Use Hotwire (Turbo and Stimulus) for dynamic, SPA-like interactions.
   - Implement responsive design with Bootstrap CSS.
   - Use Rails view helpers and partials to keep views DRY.
+  - Use Mobile First design
 
   Performance Optimization
   - Use database indexing effectively.

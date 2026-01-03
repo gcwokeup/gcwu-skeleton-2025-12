@@ -1,0 +1,178 @@
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <!-- Header -->
+      <div class="mb-4">
+        <h2 class="mb-1">Edit Profile</h2>
+        <p class="text-muted">Update your profile information and avatar</p>
+      </div>
+      
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 p-sm-5">
+          <%= form_with model: @user, url: user_path(@user), method: :patch, local: true, html: { multipart: true } do |f| %>
+            <% if @user.errors.any? %>
+              <div class="alert alert-danger" role="alert">
+                <h5 class="alert-heading">
+                  <%= pluralize(@user.errors.count, "error") %> prohibited this profile from being saved:
+                </h5>
+                <ul class="mb-0">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            
+            <!-- Avatar Upload Section -->
+            <div class="mb-4">
+              <label class="form-label fw-bold">Profile Picture</label>
+              <div class="d-flex flex-column flex-sm-row align-items-center gap-3">
+                <!-- Current Avatar Preview -->
+                <div class="avatar-preview">
+                  <% if @user.avatar.attached? %>
+                    <%= image_tag @user.avatar.variant(resize_to_limit: [150, 150]), 
+                        id: "avatar-preview",
+                        class: "rounded-circle img-fluid shadow", 
+                        style: "width: 120px; height: 120px; object-fit: cover;",
+                        alt: @user.full_name %>
+                  <% elsif @user.avatar_url.present? %>
+                    <%= image_tag @user.avatar_url, 
+                        id: "avatar-preview",
+                        class: "rounded-circle img-fluid shadow", 
+                        style: "width: 120px; height: 120px; object-fit: cover;",
+                        alt: @user.full_name %>
+                  <% else %>
+                    <div id="avatar-preview" class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center shadow" 
+                         style="width: 120px; height: 120px; font-size: 2.5rem;">
+                      <%= @user.first_name[0].upcase %><%= @user.last_name[0].upcase %>
+                    </div>
+                  <% end %>
+                </div>
+                
+                <!-- Upload Controls -->
+                <div class="flex-grow-1">
+                  <%= f.file_field :avatar, 
+                      accept: 'image/png,image/jpeg,image/jpg,image/gif',
+                      class: "form-control",
+                      id: "avatar-input",
+                      data: { 
+                        action: "change->avatar#preview"
+                      } %>
+                  <small class="form-text text-muted d-block mt-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    JPG, PNG or GIF. Max size 5MB. Recommended: 400x400px
+                  </small>
+                </div>
+              </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- Name Fields -->
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-sm-6">
+                <%= f.label :first_name, "First Name", class: "form-label" %>
+                <%= f.text_field :first_name, class: "form-control form-control-lg", placeholder: "John" %>
+              </div>
+              
+              <div class="col-12 col-sm-6">
+                <%= f.label :last_name, "Last Name", class: "form-label" %>
+                <%= f.text_field :last_name, class: "form-control form-control-lg", placeholder: "Doe" %>
+              </div>
+            </div>
+            
+            <!-- Username -->
+            <div class="mb-3">
+              <%= f.label :username, "Username", class: "form-label" %>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text">@</span>
+                <%= f.text_field :username, class: "form-control", placeholder: "johndoe" %>
+              </div>
+              <small class="form-text text-muted">
+                Only letters, numbers, and underscores. 3-30 characters.
+              </small>
+            </div>
+            
+            <!-- Email (read-only, change in settings) -->
+            <div class="mb-4">
+              <%= f.label :email, "Email Address", class: "form-label" %>
+              <%= f.email_field :email, class: "form-control form-control-lg", disabled: true %>
+              <small class="form-text text-muted">
+                <i class="bi bi-lock me-1"></i>
+                To change your email, go to <%= link_to "Account Settings", settings_path %>.
+              </small>
+            </div>
+            
+            <hr class="my-4">
+            
+            <!-- Action Buttons -->
+            <div class="d-flex flex-column flex-sm-row gap-2 justify-content-between">
+              <%= link_to user_path(@user), class: "btn btn-outline-secondary btn-lg order-sm-first" do %>
+                <i class="bi bi-x-circle me-1"></i> Cancel
+              <% end %>
+              
+              <%= f.submit "Save Changes", class: "btn btn-primary btn-lg order-sm-last" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Danger Zone -->
+      <div class="card shadow-sm border-danger mt-4">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Danger Zone
+          </h5>
+        </div>
+        <div class="card-body">
+          <h6>Delete Account</h6>
+          <p class="text-muted mb-3">
+            Once you delete your account, there is no going back. Please be certain.
+          </p>
+          <%= button_to "Delete My Account", 
+              registration_path(@user), 
+              method: :delete,
+              data: { 
+                turbo_method: :delete,
+                turbo_confirm: "Are you absolutely sure? This action cannot be undone. Type 'DELETE' to confirm."
+              },
+              class: "btn btn-danger" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Avatar Preview -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('avatar-input');
+    const avatarPreview = document.getElementById('avatar-preview');
+    
+    if (avatarInput) {
+      avatarInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            // If preview is an img element
+            if (avatarPreview.tagName === 'IMG') {
+              avatarPreview.src = e.target.result;
+            } else {
+              // If preview is a div with initials, replace it
+              const newImg = document.createElement('img');
+              newImg.id = 'avatar-preview';
+              newImg.src = e.target.result;
+              newImg.className = 'rounded-circle img-fluid shadow';
+              newImg.style.cssText = 'width: 120px; height: 120px; object-fit: cover;';
+              avatarPreview.parentNode.replaceChild(newImg, avatarPreview);
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  });
+</script>
+

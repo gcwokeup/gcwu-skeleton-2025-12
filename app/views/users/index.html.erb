@@ -1,0 +1,187 @@
+<div class="container py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col">
+      <h2 class="mb-1">Community Members</h2>
+      <p class="text-muted">Discover and connect with other users</p>
+    </div>
+  </div>
+  
+  <!-- Search Bar -->
+  <div class="row mb-4">
+    <div class="col-12 col-lg-8 mx-auto">
+      <%= form_with url: users_path, method: :get, class: "d-flex gap-2", data: { turbo_frame: "users-list" } do |f| %>
+        <div class="input-group input-group-lg">
+          <span class="input-group-text bg-white">
+            <i class="bi bi-search"></i>
+          </span>
+          <%= f.text_field :query, 
+              value: params[:query],
+              class: "form-control form-control-lg border-start-0", 
+              placeholder: "Search by name, username, or email...",
+              autofocus: true %>
+        </div>
+        <%= f.submit "Search", class: "btn btn-primary btn-lg d-none d-sm-block" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Stats Bar (Mobile-optimized) -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm bg-primary text-white">
+        <div class="card-body py-3">
+          <div class="row text-center">
+            <div class="col-4">
+              <h4 class="mb-0"><%= User.count %></h4>
+              <small>Total Users</small>
+            </div>
+            <div class="col-4">
+              <h4 class="mb-0"><%= User.where("created_at > ?", 7.days.ago).count %></h4>
+              <small>This Week</small>
+            </div>
+            <div class="col-4">
+              <h4 class="mb-0"><%= User.where("created_at > ?", 24.hours.ago).count %></h4>
+              <small>Today</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Users Grid -->
+  <%= turbo_frame_tag "users-list" do %>
+    <% if @users.any? %>
+      <div class="row g-3 g-lg-4">
+        <% @users.each do |user| %>
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm hover-lift">
+              <%= link_to user_path(user), class: "text-decoration-none" do %>
+                <div class="card-body text-center p-3 p-lg-4">
+                  <!-- Avatar -->
+                  <div class="mb-3">
+                    <% if user.avatar.attached? %>
+                      <%= image_tag user.avatar.variant(resize_to_limit: [200, 200]), 
+                          class: "rounded-circle img-fluid shadow-sm", 
+                          style: "width: 80px; height: 80px; object-fit: cover;",
+                          alt: user.full_name %>
+                    <% elsif user.avatar_url.present? %>
+                      <%= image_tag user.avatar_url, 
+                          class: "rounded-circle img-fluid shadow-sm", 
+                          style: "width: 80px; height: 80px; object-fit: cover;",
+                          alt: user.full_name %>
+                    <% else %>
+                      <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center shadow-sm" 
+                           style="width: 80px; height: 80px; font-size: 1.75rem;">
+                        <%= user.first_name[0].upcase %><%= user.last_name[0].upcase %>
+                      </div>
+                    <% end %>
+                  </div>
+                  
+                  <!-- Name -->
+                  <h6 class="card-title mb-1 text-dark text-truncate">
+                    <%= user.full_name %>
+                  </h6>
+                  
+                  <!-- Username -->
+                  <p class="text-muted small mb-2 text-truncate">
+                    @<%= user.username %>
+                  </p>
+                  
+                  <!-- Badge (if OAuth) -->
+                  <% if user.provider.present? %>
+                    <span class="badge bg-light text-dark">
+                      <i class="bi bi-google text-danger"></i>
+                    </span>
+                  <% end %>
+                  
+                  <!-- Stats -->
+                  <div class="d-none d-lg-block mt-3 pt-3 border-top">
+                    <div class="row text-center small">
+                      <div class="col-4">
+                        <div class="fw-bold text-dark">0</div>
+                        <small class="text-muted">Posts</small>
+                      </div>
+                      <div class="col-4">
+                        <div class="fw-bold text-dark">0</div>
+                        <small class="text-muted">Followers</small>
+                      </div>
+                      <div class="col-4">
+                        <div class="fw-bold text-dark">0</div>
+                        <small class="text-muted">Following</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Pagination Placeholder -->
+      <div class="row mt-4">
+        <div class="col-12 text-center">
+          <% if @users.count >= 50 %>
+            <p class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Showing first 50 users. Add pagination for more results.
+            </p>
+          <% else %>
+            <p class="text-muted">
+              Showing <%= @users.count %> <%= 'user'.pluralize(@users.count) %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+              <i class="bi bi-people text-muted mb-3" style="font-size: 4rem;"></i>
+              <h4 class="text-muted">No users found</h4>
+              <% if params[:query].present? %>
+                <p class="text-muted mb-3">
+                  No results for "<strong><%= params[:query] %></strong>"
+                </p>
+                <%= link_to "Clear search", users_path, class: "btn btn-primary" %>
+              <% else %>
+                <p class="text-muted">Be the first to join the community!</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<!-- Additional CSS for hover effects -->
+<style>
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  /* Search input icon alignment */
+  .input-group .border-start-0 {
+    border-left: 0 !important;
+  }
+  
+  .input-group-text {
+    border-right: 0;
+  }
+  
+  /* Make cards equal height */
+  .card.h-100 {
+    height: 100% !important;
+  }
+</style>
+

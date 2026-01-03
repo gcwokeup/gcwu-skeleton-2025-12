@@ -1,4 +1,19 @@
 Rails.application.routes.draw do
+  # Devise routes for User authentication
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
+
+  # User profile routes
+  resources :users, only: [:index, :show, :edit, :update]
+
+  # Account settings routes
+  get 'settings', to: 'users#settings', as: :settings
+  patch 'settings', to: 'users#update_settings'
+
+  # Landing page
+  root "pages#home"
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
