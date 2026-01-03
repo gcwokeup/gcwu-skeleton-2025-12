@@ -85,7 +85,7 @@ group :development do
   gem "foreman"
 
   # Autoload dotenv in Rails
-  gem "dotenv-rails", "~> 2.1", ">= 2.1.1"
+  gem "dotenv-rails", "~> 3.2"
 
   # Auto-generate schema documentation in models
   gem "annotate"
